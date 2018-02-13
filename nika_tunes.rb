@@ -1,16 +1,16 @@
 require 'uri'
+require 'logger'
 
 require 'sonos'
 require 'rspotify'
 require 'dotenv'
 
 Dotenv.load
+$logger = Logger.new(STDOUT)
 
 class Jukebox
-  attr_reader :speaker
-
-  def initialize(speaker)
-    @speaker = speaker
+  def initialize(speaker_name)
+    @speaker_name = speaker_name
   end
 
   # Play a given spotify URI on the Sonos speaker
@@ -31,16 +31,27 @@ class Jukebox
 
   # Search for a track on Spotify by title and play it on the Sonos speaker
   def play_spotify_track(title)
-    puts 'Retrieving track from Spotify...'
+    $logger.info "Retrieving track \"#{title}\" from Spotify..."
     track = RSpotify::Track.search(title).first
-    puts 'done.'
+    $logger.info 'done.'
     artist = track.artists.map(&:name).join(" & ")
 
-    puts "Found #{artist} - #{track.name} from the album \"#{track.album.name}\""
+    $logger.info "Found #{artist} - #{track.name} from the album \"#{track.album.name}\""
     play_spotify_uris([track.uri])
   end
 
   private
+  def speaker
+    return @speaker if @speaker
+
+    $logger.info "Finding speaker \"#{@speaker_name}\"..."
+    system = Sonos::System.new
+    @speaker = system.speakers.find{|speaker| speaker.name == @speaker_name}
+    $logger.info 'done'
+
+    @speaker
+  end
+
   def sonos_uri_from_spotify_uri(spotify_uri)
     safe_spotify_uri = URI.encode(spotify_uri + "?sid=12&flags=8224&sn=2", ":&")
 
@@ -57,21 +68,16 @@ class Spotify
   end
 end
 
-puts 'Authenticating with Spotify...'
+$logger.info 'Authenticating with Spotify...'
 client_id = ENV.fetch("SPOTIFY_CLIENT_ID")
 client_secret = ENV.fetch("SPOTIFY_CLIENT_SECRET")
 RSpotify.authenticate(client_id, client_secret)
-puts 'done'
-puts 'Finding playlist on Spotify...'
+$logger.info 'done'
+$logger.info 'Finding playlist on Spotify...'
 playlist = RSpotify::Playlist.find("zdwiggins", "4m2vrzVCUjvrHzaW00Skli")
-puts 'done'
+$logger.info 'done'
 
-puts 'Finding speaker...'
-system = Sonos::System.new
-speaker = system.speakers.find{|speaker| speaker.name == "Bedroom"}
-puts 'done'
-
-jukebox = Jukebox.new(speaker)
+jukebox = Jukebox.new(ENV.fetch("SPEAKER_NAME"))
 
 loop do
   print 'Title: '
