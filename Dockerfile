@@ -10,4 +10,4 @@ ADD Gemfile* /app/
 RUN bundle install
 
 ADD . /app/
-CMD bash
+CMD ruby nika_tunes.rb
