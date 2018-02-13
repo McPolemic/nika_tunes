@@ -13,7 +13,7 @@ def log(msg, &block)
   $logger.info(msg)
   result = block.call
   end_time = Time.now
-  $logger.info("done. Took #{end_time-start_time} seconds")
+  $logger.info("done. Took #{(end_time-start_time).to_f} seconds")
 
   result
 end
@@ -26,17 +26,7 @@ class Jukebox
     @spotify = spotify
   end
 
-  # Play a given spotify URI on the Sonos speaker
-  def play_spotify_uris(spotify_uris)
-    speaker.clear_queue
-    spotify_uris.each do |spotify_uri|
-      sonos_uri = sonos_uri_from_spotify_uri(spotify_uri)
-      speaker.add_to_queue(sonos_uri)
-    end
-    speaker.play
-  end
-
-  # Play a given RSpotify::Playlist on the Sonos speaker
+  # Play a given user's playlist (id is spotify id)
   def play_spotify_playlist(user, id)
     uris = log("Loading playlist \"#{user} - #{id}\" from spotify") do
       spotify.playlist_uris(user, id)
@@ -46,13 +36,32 @@ class Jukebox
 
   # Search for a track on Spotify by title and play it on the Sonos speaker
   def play_spotify_track(title)
-    uri = log("Loading track \"#{title}\" from spotify") do
-      spotify.track_uri(title)
+    play_spotify_tracks([title])
+  end
+
+  # Play multiple tracks given an array of titles
+  def play_spotify_tracks(titles)
+    uris = titles.map do |title|
+      log("Loading track \"#{title}\" from spotify") do
+        spotify.track_uri(title)
+      end
     end
-    play_spotify_uris([uri])
+    play_spotify_uris(uris)
   end
 
   private
+  # Play a given spotify URI on the Sonos speaker
+  def play_spotify_uris(spotify_uris)
+    speaker.clear_queue
+
+    spotify_uris.each do |spotify_uri|
+      sonos_uri = sonos_uri_from_spotify_uri(spotify_uri)
+      speaker.add_to_queue(sonos_uri)
+    end
+
+    speaker.play
+  end
+
   def speaker
     return @speaker if @speaker
 
@@ -103,7 +112,7 @@ class Spotify
     key = [user, id].join(':')
     return @playlist_cache[key] if @playlist_cache[key]
 
-    playlist = RSpotify::Playlist.find("zdwiggins", "4m2vrzVCUjvrHzaW00Skli")
+    playlist = RSpotify::Playlist.find(user, id)
     @playlist_cache[key] = playlist.tracks.map(&:uri)
   end
 
@@ -111,16 +120,41 @@ class Spotify
   private_class_method :new
 end
 
+# Reads codes from RFID tags and translates those to Jukebox actions
+class CodeReader
+  attr_reader :jukebox
+
+  def initialize(jukebox)
+    @jukebox = jukebox
+  end
+
+  def repl
+    known_values = {
+      '1' => Proc.new { jukebox.play_spotify_track('Remember Me') },
+      '2' => Proc.new { jukebox.play_spotify_track('Tempest Shadow') },
+      '3' => Proc.new { jukebox.play_spotify_track('E Dagger') },
+      '4' => Proc.new { jukebox.play_spotify_track('Jojo Siwa') },
+      '5' => Proc.new { jukebox.play_spotify_track('Tony Sly Liver Let Die') },
+      '6' => Proc.new { jukebox.play_spotify_track('Cheap Thrills') },
+      '7' => Proc.new { jukebox.play_spotify_track('Lindsey Stirling Hold My Heart') },
+      '8' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") },
+      '9' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
+    }
+
+    loop do
+      print 'Code: '
+      code = gets.chomp
+
+      default_action = Proc.new { puts "Unknown code: #{code}" }
+      known_values.fetch(code, default_action).call
+    end
+  end
+end
+
 speaker_name = ENV.fetch("SPEAKER_NAME")
 spotify = Spotify.authenticate!
 jukebox = Jukebox.new(speaker_name, spotify)
 
-# Bedtime music
-jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli")
-
-loop do
-  print 'Title: '
-  title = gets.chomp
-  jukebox.play_spotify_track(title)
-end
+# Kick off infinite loop to read input
+CodeReader.new(jukebox).repl
 
