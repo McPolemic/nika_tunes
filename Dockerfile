@@ -16,9 +16,11 @@ RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.1 1 && \
 RUN gem install bundler
 RUN bundle config --global silence_root_warning 1
 
+RUN apt-get install -y python-pip python-dev && pip install evdev
+
 WORKDIR /app
 ADD Gemfile* /app/
 RUN bundle install
 
 ADD . /app/
-CMD ruby nika_tunes.rb
+CMD dotenv python reader.py | bundle exec ruby nika_tunes.rb

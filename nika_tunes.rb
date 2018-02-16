@@ -143,7 +143,7 @@ class CodeReader
 
     loop do
       print 'Code: '
-      code = gets.chomp
+      code = $stdin.gets.chomp
 
       default_action = Proc.new { puts "Unknown code: #{code}" }
       known_values.fetch(code, default_action).call
