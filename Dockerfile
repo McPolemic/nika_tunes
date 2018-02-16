@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y ruby2.1         \
                                          automake        \
                                          libtool         \
                                          libltdl-dev     \
+                                         libevdev-dev    \
                                          build-essential \
                                          zlib1g-dev
 RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.1 1 && \
