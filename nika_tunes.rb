@@ -130,15 +130,15 @@ class CodeReader
 
   def repl
     known_values = {
-      '1' => Proc.new { jukebox.play_spotify_track('Remember Me') },
-      '2' => Proc.new { jukebox.play_spotify_track('Tempest Shadow') },
-      '3' => Proc.new { jukebox.play_spotify_track('E Dagger') },
-      '4' => Proc.new { jukebox.play_spotify_track('Jojo Siwa') },
-      '5' => Proc.new { jukebox.play_spotify_track('Tony Sly Liver Let Die') },
-      '6' => Proc.new { jukebox.play_spotify_track('Cheap Thrills') },
-      '7' => Proc.new { jukebox.play_spotify_track('Lindsey Stirling Hold My Heart') },
-      '8' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") },
-      '9' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
+      '08931021' => Proc.new { jukebox.play_spotify_track('Remember Me') },
+      '08934207' => Proc.new { jukebox.play_spotify_track('Tempest Shadow') },
+      '08934206' => Proc.new { jukebox.play_spotify_track('E Dagger') },
+      '09520830' => Proc.new { jukebox.play_spotify_track('Jojo Siwa') },
+      '09520651' => Proc.new { jukebox.play_spotify_track('Tony Sly Liver Let Die') },
+      '09535374' => Proc.new { jukebox.play_spotify_track('Cheap Thrills') },
+      '09535355' => Proc.new { jukebox.play_spotify_track('Lindsey Stirling Hold My Heart') },
+      '08934175' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") },
+      '08930890' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
     }
 
     loop do
