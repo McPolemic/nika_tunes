@@ -49,6 +49,11 @@ class Jukebox
     play_spotify_uris(uris)
   end
 
+  # Turn on repeat
+  def repeat!
+    speaker.repeat_on
+  end
+
   private
   # Play a given spotify URI on the Sonos speaker
   def play_spotify_uris(spotify_uris)
@@ -137,7 +142,7 @@ class CodeReader
       '09520651' => Proc.new { jukebox.play_spotify_track('Tony Sly Liver Let Die') },
       '09535374' => Proc.new { jukebox.play_spotify_track('Cheap Thrills') },
       '09535355' => Proc.new { jukebox.play_spotify_track('Lindsey Stirling Hold My Heart') },
-      '08934175' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") },
+      '08934175' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") && jukebox.repeat! },
       '08930890' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
     }
 

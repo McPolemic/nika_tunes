@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import os
-<<<<<<< 0474d937733753610291e1c79ddaa43b98152bb5
 import sys
-=======
->>>>>>> Add a program to read the card reader input
 import evdev
 
 device = evdev.InputDevice(os.environ['INPUT_DEVICE'])
@@ -21,10 +18,7 @@ for event in device.read_loop():
 
             if value == "ENTER":
                 print("".join(buffer))
-<<<<<<< 0474d937733753610291e1c79ddaa43b98152bb5
                 sys.stdout.flush()
-=======
->>>>>>> Add a program to read the card reader input
                 buffer = []
             else:
                 buffer.append(value)
