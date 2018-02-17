@@ -1,8 +1,9 @@
 FROM resin/rpi-raspbian
 MAINTAINER Adam Lukens <adam.lukens@mcpolemic.com>
 
-RUN apt-get update && apt-get install -y ruby2.1         \
-                                         ruby2.1-dev     \
+RUN echo 'deb http://archive.raspbian.org/raspbian/ stretch main' >> /etc/apt/sources.list
+RUN apt-get update && apt-get install -y ruby2.3         \
+                                         ruby2.3-dev     \
                                          libffi-dev      \
                                          autoconf        \
                                          automake        \
@@ -11,12 +12,12 @@ RUN apt-get update && apt-get install -y ruby2.1         \
                                          libevdev-dev    \
                                          build-essential \
                                          zlib1g-dev
-RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.1 1 && \
-    update-alternatives --install /usr/bin/gem gem /usr/bin/gem2.1 1
+RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.3 1 && \
+    update-alternatives --install /usr/bin/gem gem /usr/bin/gem2.3 1
 RUN gem install bundler
 RUN bundle config --global silence_root_warning 1
 
-RUN apt-get install -y python-pip python-dev && pip install evdev
+RUN apt-get install -y python-pip python-dev python-setuptools && pip install evdev
 
 WORKDIR /app
 ADD Gemfile* /app/
