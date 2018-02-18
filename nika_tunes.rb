@@ -144,6 +144,7 @@ class CodeReader
       '09535355' => Proc.new { jukebox.play_spotify_track('Lindsey Stirling Hold My Heart') },
       '08934175' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") && jukebox.repeat! },
       '08930890' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
+      '09520638' => Proc.new { jukebox.play_spotify_track("How Far I'll Go Auli'i") },
     }
 
     loop do
