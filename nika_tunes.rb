@@ -145,6 +145,15 @@ class CodeReader
       '08934175' => Proc.new { jukebox.play_spotify_playlist("zdwiggins", "4m2vrzVCUjvrHzaW00Skli") && jukebox.repeat! },
       '08930890' => Proc.new { jukebox.play_spotify_track('Set It All Free') },
       '09520638' => Proc.new { jukebox.play_spotify_track("How Far I'll Go Auli'i") },
+      '09815232' => Proc.new { jukebox.play_spotify_track("Lindsey Stirling Roundtable Rival") },
+      '09815261' => Proc.new { jukebox.play_spotify_track("Kelly Clarkson Love So Soft") },
+      '09535210' => Proc.new { jukebox.play_spotify_track("When Will My Life Begin") },
+      '09535342' => Proc.new { jukebox.play_spotify_track("I See The Light") },
+      '09535242' => Proc.new { jukebox.play_spotify_track("A Whole New World") },
+      '09639103' => Proc.new { jukebox.play_spotify_track("How Far I'll Go") },
+      '09535177' => Proc.new { jukebox.play_spotify_track("Make A Man Out of You") },
+      '09535223' => Proc.new { jukebox.play_spotify_track("System of a Down Bounce") },
+      '09520619' => Proc.new { jukebox.play_spotify_track("You're Welcome") },
     }
 
     loop do
