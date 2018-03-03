@@ -168,8 +168,10 @@ end
 
 speaker_name = ENV.fetch("SPEAKER_NAME")
 spotify = Spotify.authenticate!
-jukebox = Jukebox.new(speaker_name, spotify)
+$jukebox = Jukebox.new(speaker_name, spotify)
 
 # Kick off infinite loop to read input
-CodeReader.new(jukebox).repl
+CodeReader.new($jukebox).repl if $0 == __FILE__
+
+puts "Jukebox accessible at $jukebox."
 

@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -it --net=host --device=/dev/input/event0 nika_tunes pry -r ./nika_tunes
